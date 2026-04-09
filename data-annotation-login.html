@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DataLabel Studio - 登录</title>
+  <style>
+    :root {
+      --bg-primary: #050b1a;
+      --bg-secondary: #0b1a36;
+      --card-bg: rgba(11, 26, 54, 0.72);
+      --card-border: rgba(116, 181, 255, 0.32);
+      --text-primary: #e8f4ff;
+      --text-secondary: #9dc0e6;
+      --brand: #2e8fff;
+      --brand-light: #67c8ff;
+      --success: #44d7c7;
+      --warning: #ffc24d;
+      --danger: #ff6f91;
+      --shadow: 0 20px 55px rgba(8, 53, 116, 0.38);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text-primary);
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(46, 143, 255, 0.35), transparent 34%),
+        radial-gradient(circle at 85% 78%, rgba(63, 200, 255, 0.24), transparent 38%),
+        linear-gradient(140deg, #040913 0%, #071a37 45%, #07142c 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        linear-gradient(rgba(109, 166, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(109, 166, 255, 0.08) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: radial-gradient(circle at 50% 50%, #000 30%, transparent 85%);
+    }
+
+    .wrapper {
+      width: min(1200px, 92vw);
+      margin: 40px auto;
+      display: grid;
+      grid-template-columns: 1.2fr 0.95fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .intro-panel {
+      padding: 34px 34px 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intro-panel::after {
+      content: "";
+      position: absolute;
+      width: 380px;
+      height: 380px;
+      right: -180px;
+      top: -170px;
+      background: radial-gradient(circle, rgba(84, 162, 255, 0.28), transparent 70%);
+      pointer-events: none;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--brand-light);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border: 1px solid rgba(103, 200, 255, 0.5);
+      border-radius: 999px;
+      background: rgba(46, 143, 255, 0.14);
+    }
+
+    .logo-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #6de3ff;
+      box-shadow: 0 0 10px #6de3ff;
+    }
+
+    h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(28px, 3vw, 38px);
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+    }
+
+    .intro {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 92%;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0 24px;
+    }
+
+    .tag {
+      font-size: 12px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(137, 198, 255, 0.42);
+      background: rgba(23, 84, 180, 0.24);
+      color: #d4ecff;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .metric {
+      border: 1px solid rgba(126, 189, 255, 0.3);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: rgba(10, 45, 108, 0.38);
+    }
+
+    .metric .label {
+      display: block;
+      font-size: 12px;
+      color: #95bbec;
+      margin-bottom: 6px;
+    }
+
+    .metric .value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #f0f8ff;
+    }
+
+    .annotation-board {
+      border: 1px solid rgba(116, 181, 255, 0.35);
+      border-radius: 16px;
+      background: linear-gradient(170deg, rgba(5, 18, 44, 0.85), rgba(7, 24, 58, 0.65));
+      padding: 14px;
+    }
+
+    .annotation-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: #a8cefa;
+    }
+
+    .dot-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot-group span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(152, 212, 255, 0.7);
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      display: block;
+      background: linear-gradient(160deg, #0b2045, #0c2959);
+      border: 1px solid rgba(116, 181, 255, 0.3);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: #b2d4f7;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-item i {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+
+    .login-panel {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login-panel h2 {
+      margin: 0 0 6px;
+      font-size: 28px;
+      line-height: 1.3;
+    }
+
+    .subtitle {
+      margin: 0 0 24px;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      font-size: 13px;
+      color: #b6d6fa;
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .input {
+      width: 100%;
+      border: 1px solid rgba(129, 195, 255, 0.35);
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: rgba(5, 24, 58, 0.6);
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input:focus {
+      border-color: var(--brand-light);
+      box-shadow: 0 0 0 3px rgba(103, 200, 255, 0.14);
+    }
+
+    .form-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 12px 0 18px;
+      font-size: 13px;
+      color: #a8cbf0;
+    }
+
+    .checkbox {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .checkbox input {
+      accent-color: var(--brand);
+    }
+
+    .form-link {
+      color: #8bd6ff;
+      text-decoration: none;
+    }
+
+    .form-link:hover {
+      text-decoration: underline;
+    }
+
+    .btn-primary {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      background: linear-gradient(90deg, #2b88ff, #36bcff);
+      box-shadow: 0 12px 24px rgba(35, 126, 255, 0.35);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+    }
+
+    .other-login {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .btn-secondary {
+      border-radius: 10px;
+      padding: 10px;
+      border: 1px solid rgba(137, 198, 255, 0.45);
+      background: rgba(8, 30, 70, 0.5);
+      color: #c7e5ff;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .policy {
+      margin-top: 18px;
+      font-size: 12px;
+      color: #88afd9;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 980px) {
+      .wrapper {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <section class="panel intro-panel">
+      <div class="logo"><span class="logo-dot"></span>DataLabel Studio</div>
+      <h1>智能数据标注平台</h1>
+      <p class="intro">
+        面向图像、视频与文本场景的一体化数据标注系统，提供目标检测、语义分割、关键点与文本实体标注能力，
+        支持团队协作、质检闭环与任务追踪，帮助你更快构建高质量训练数据。
+      </p>
+
+      <div class="tags">
+        <span class="tag">目标框标注</span>
+        <span class="tag">语义分割</span>
+        <span class="tag">关键点追踪</span>
+        <span class="tag">多级审核</span>
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <span class="label">今日标注任务</span>
+          <span class="value">1,248</span>
+        </div>
+        <div class="metric">
+          <span class="label">在线标注员</span>
+          <span class="value">326</span>
+        </div>
+        <div class="metric">
+          <span class="label">模型预标注准确率</span>
+          <span class="value">93.7%</span>
+        </div>
+      </div>
+
+      <div class="annotation-board">
+        <div class="annotation-title">
+          <span>数据标注预览 · Task #A12-88</span>
+          <span class="dot-group"><span></span><span></span><span></span></span>
+        </div>
+        <svg viewBox="0 0 700 360" role="img" aria-label="数据标注示意图">
+          <defs>
+            <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#0a1b3f"/>
+              <stop offset="100%" stop-color="#0e2f64"/>
+            </linearGradient>
+            <linearGradient id="boxFill" x1="0" x2="1">
+              <stop offset="0%" stop-color="#2d90ff" stop-opacity="0.12"/>
+              <stop offset="100%" stop-color="#3fd6ff" stop-opacity="0.26"/>
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="700" height="360" fill="url(#bgGrad)"/>
+
+          <g opacity="0.42">
+            <circle cx="120" cy="68" r="32" fill="#184a89"/>
+            <circle cx="630" cy="70" r="26" fill="#173f78"/>
+            <circle cx="520" cy="300" r="45" fill="#16386a"/>
+          </g>
+
+          <rect x="110" y="110" width="168" height="156" fill="url(#boxFill)" stroke="#41c9ff" stroke-width="3"/>
+          <text x="120" y="132" fill="#95ebff" font-size="16">目标框: Forklift</text>
+
+          <polygon points="345,96 480,82 575,166 528,280 380,252 308,174"
+                   fill="rgba(68, 215, 199, 0.17)"
+                   stroke="#44d7c7"
+                   stroke-width="3"
+                   stroke-dasharray="8 6"/>
+          <text x="358" y="114" fill="#76f0e3" font-size="16">分割区域: Pallet</text>
+
+          <g fill="#ffc24d">
+            <circle cx="156" cy="154" r="6"/>
+            <circle cx="194" cy="145" r="6"/>
+            <circle cx="229" cy="164" r="6"/>
+            <circle cx="205" cy="208" r="6"/>
+            <circle cx="170" cy="212" r="6"/>
+          </g>
+          <polyline points="156,154 194,145 229,164 205,208 170,212 156,154"
+                    fill="none" stroke="#ffc24d" stroke-width="2"/>
+          <text x="118" y="238" fill="#ffd98b" font-size="15">关键点标注</text>
+
+          <line x1="278" y1="188" x2="343" y2="174" stroke="#8ac6ff" stroke-width="2"/>
+          <line x1="278" y1="188" x2="205" y2="208" stroke="#8ac6ff" stroke-width="2"/>
+          <line x1="575" y1="166" x2="620" y2="134" stroke="#8ac6ff" stroke-width="2"/>
+          <text x="624" y="130" fill="#a1cfff" font-size="14">待审核</text>
+        </svg>
+
+        <div class="legend">
+          <span class="legend-item"><i style="background:#3fd6ff;"></i>目标检测框</span>
+          <span class="legend-item"><i style="background:#44d7c7;"></i>语义分割</span>
+          <span class="legend-item"><i style="background:#ffc24d;"></i>关键点</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel login-panel">
+      <h2>欢迎登录</h2>
+      <p class="subtitle">统一身份认证中心 · DataLabel Studio</p>
+
+      <form>
+        <div class="form-group">
+          <label class="form-label" for="account">账号</label>
+          <input class="input" id="account" type="text" placeholder="请输入邮箱 / 工号">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="password">密码</label>
+          <input class="input" id="password" type="password" placeholder="请输入密码">
+        </div>
+
+        <div class="form-line">
+          <label class="checkbox">
+            <input type="checkbox" checked>
+            <span>7天内免登录</span>
+          </label>
+          <a class="form-link" href="#">忘记密码？</a>
+        </div>
+
+        <button class="btn-primary" type="button">登录系统</button>
+
+        <div class="other-login">
+          <button class="btn-secondary" type="button">短信验证码登录</button>
+          <button class="btn-secondary" type="button">企业 SSO 登录</button>
+        </div>
+      </form>
+
+      <p class="policy">
+        登录即表示你同意《用户服务协议》与《数据安全规范》，系统将对标注过程进行全链路审计与可追溯管理。
+      </p>
+    </section>
+  </div>
+</body>
+</html>
